@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Abola Lee<Abola921@gmail.com>
  */
-interface Crawler {
+public interface Crawler {
 
 
     String crawl(String target);

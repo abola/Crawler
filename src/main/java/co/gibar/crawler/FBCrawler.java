@@ -23,11 +23,12 @@ public class FBCrawler extends WebCrawler{
     @Override
     public String crawl(String target){
 
-
-        this.accessToken = getAccessToken();
+        if (null == accessToken)
+            this.accessToken = getAccessToken();
         try{
             return getGraphApi(target);
         }catch( FBAccessTokenExpireException ex ){
+            this.accessToken = null;
             return crawl(target);
         }
     }
@@ -54,6 +55,7 @@ public class FBCrawler extends WebCrawler{
         String request = "https://graph.facebook.com/" +
                 this.apiVersion + "/" +
                 api +
+                "&locale=zh_TW" +
                 "&access_token=" + this.accessToken;
         return getUrl( request ) ;
     }
