@@ -12,21 +12,24 @@ public class FBCrawler extends WebCrawler{
     private String clientId;
     private String clientSecret;
 
-    private String apiVersion;
+    private String apiVersion = "v2.4";
 
+
+    public FBCrawler(String clientId, String clientSecret){
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
 
     @Override
     public String crawl(String target){
 
+
+        this.accessToken = getAccessToken();
         try{
-            getGraphApi(target);
+            return getGraphApi(target);
         }catch( FBAccessTokenExpireException ex ){
-            getAccessToken();
             return crawl(target);
         }
-
-
-        return "";
     }
 
     /**
@@ -34,13 +37,33 @@ public class FBCrawler extends WebCrawler{
      * @return
      */
     protected String getAccessToken(){
-        // https://graph.facebook.com/v2.4/oauth/access_token?client_id=626465174161774&client_secret=dbd550847406c13cd1da4085331ab54e&grant_type=client_credentials
+        //
+        String requestAccessTokenUrl = "https://graph.facebook.com" +
+                "/oauth/access_token" +
+                "?client_id=" + this.clientId +
+                "&client_secret=" + this.clientSecret +
+                "&grant_type=client_credentials";
+        String response = getUrl(requestAccessTokenUrl);
 
-        return "";
+
+//        System.out.println(response);
+        return response.split("=")[1];
     }
-
 
     protected String getGraphApi(String api) throws FBAccessTokenExpireException {
-        return "";
+        String request = "https://graph.facebook.com/" +
+                this.apiVersion + "/" +
+                api +
+                "&access_token=" + this.accessToken;
+        return getUrl( request ) ;
     }
+
+//
+//    public static void main(String args[]){
+////        System.out.print("start...");
+//        System.out.println(
+//                new FBCrawler("626465174161774", "dbd550847406c13cd1da4085331ab54e")
+//                .crawl("XDSelect?fields=id,name")
+//        );
+//    }
 }
