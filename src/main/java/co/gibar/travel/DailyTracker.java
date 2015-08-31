@@ -20,20 +20,27 @@ public class DailyTracker {
     private String clientId;
     private String clientSecret;
 
+    private String longToken;
+
+
     public DailyTracker(){
         loadConfiguration();
 
-        crawl = new FBCrawler(clientId, clientSecret);
+        if ( null !=  longToken && !"".equals(longToken))
+            crawl = new FBCrawler(longToken);
+        else
+            crawl = new FBCrawler(clientId, clientSecret);
     }
 
     public void loadConfiguration(){
-        String sqlLoadConfiguration = "select * from `configuration` where `key` in ('client_id','client_secret')";
+        String sqlLoadConfiguration = "select * from `configuration` where `key` in ('client_id','client_secret','long_token')";
         try {
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadConfiguration, MySQLDataSource.connectToGibarCoDB);
 
             for( Map<String, Object> setting: results ){
                 if ( "client_id".equals(setting.get("key").toString()) ) this.clientId = setting.get("value").toString();
                 if ( "client_secret".equals(setting.get("key").toString()) ) this.clientSecret = setting.get("value").toString();
+                if ( "long_token".equals(setting.get("key").toString()) ) this.longToken = setting.get("value").toString();
             }
         }catch(Exception ex){
             // throw ConfigurationException

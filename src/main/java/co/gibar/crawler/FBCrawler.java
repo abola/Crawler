@@ -16,6 +16,9 @@ public class FBCrawler extends WebCrawler{
 
     private String apiVersion = "v2.4";
 
+    public FBCrawler(String longTermAccessToken){
+        this.accessToken = longTermAccessToken;
+    }
 
     public FBCrawler(String clientId, String clientSecret){
         this.clientId = clientId;
@@ -40,7 +43,9 @@ public class FBCrawler extends WebCrawler{
      * @return
      */
     protected String getAccessToken(){
-        //
+
+        if  ( null != this.accessToken ) return this.accessToken;
+
         String requestAccessTokenUrl = "https://graph.facebook.com" +
                 "/oauth/access_token" +
                 "?client_id=" + this.clientId +
