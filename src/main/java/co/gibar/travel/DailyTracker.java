@@ -3,7 +3,10 @@ package co.gibar.travel;
 import co.gibar.crawler.Crawler;
 import co.gibar.crawler.FBCrawler;
 import co.gibar.datasource.MySQLDataSource;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -27,22 +30,49 @@ public class DailyTracker {
 
         List<String> register = getRegisterList();
 
+        List<Map<String, Object>> resultList = Lists.newArrayList();
         for( String id : register ) {
-            callGraphAPI(id);
+            resultList.add(callGraphAPI(id));
         }
+
+        updateAll(resultList);
 
         return this;
     }
 
-    public Map<String, String> callGraphAPI(String id){
+    public ImmutableMap<String, Object> callGraphAPI(String id){
+
+        List<ImmutableMap<String,Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count");
+
+        return jsonResult.get(0);
+    }
+
+    public void updateAll(List<Map<String, Object>> resultList){
+        List<String> executeSql = Lists.newArrayList();
+        for( Map<String, Object> result : resultList){
+
+            String id  = result.get("id").toString();
+            String name = result.get("name").toString();
+            String link = result.get("link").toString();
+            String category = result.get("category").toString();
+
+            // option
+            String lat = ((Map)result.get("location")).get("latitude").toString();
+            String lng = ((Map)result.get("location")).get("longitude").toString();
+            String likes = result.get("likes").toString();
+            String cover = result.get("cover").toString();
+            String checkins = result.get("checkins").toString();
+            String talking_about_count = result.get("talking_about_count").toString();
+            String website = result.get("website").toString();
+
+            String insertOrUpdatePoint =
+                    "insert into point(id,name,lat,lng,link,cover,category,description,website) " +
+                    "values("+id+",'"+name+"',"+lat+","+lng+",'"+link+"','"+cover+"','"+category+"','','"+website+"')";
+
+            System.out.println(insertOrUpdatePoint);
+        }
 
 
-        String jsonResult = crawl.crawl(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count");
-
-        System.out.println(jsonResult);
-
-
-        return null;
     }
 
     public List<String> getRegisterList(){
