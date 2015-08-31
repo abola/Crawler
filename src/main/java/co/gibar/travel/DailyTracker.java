@@ -137,7 +137,7 @@ public class DailyTracker {
     }
 
     public List<String> getRegisterList(){
-        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now()) limit 10  ";
+        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now()) limit 30  ";
 
         try {
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadRegisterList, MySQLDataSource.connectToGibarCoDB);
