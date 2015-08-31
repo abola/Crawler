@@ -6,6 +6,7 @@ import co.gibar.crawler.JsonTools;
 import co.gibar.datasource.MySQLDataSource;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,21 +80,45 @@ public class DailyTracker {
             String talking_about_count = JsonTools.getJsonPathValue(result, "talking_about_count","0");
             String website = JsonTools.getJsonPathValue(result, "website","");
 
-            String insertOrUpdatePoint =
-                    "insert into `point`(id,name,lat,lng,link,cover,category,description,website) " +
+            String insertOrUpdatePage =
+                    "insert into `page`(id,name,lat,lng,link,cover,category,description,website) " +
                     "values("+id+",'"+name+"',"+lat+","+lng+",'"+link+"','"+cover+"','"+category+"','','"+website+"') " +
                     "on duplicate key update name=values(name), lat=values(lat), lng=values(lng)" +
                     " , link=values(link), cover=values(cover), category=values(category) " +
                     " , description=values(description), website=values(website);";
 
-            String insertOrUpdatePointVolume =
-                    "insert into `point_volume_count`(id,date,likes,talking_about_count,checkins) " +
+            String insertOrUpdatePageVolume =
+                    "insert into `page_volume_count`(id,date,likes,talking_about_count,checkins) " +
                     "values("+id+",DATE(now()),"+likes+","+talking_about_count+","+checkins+") " +
-                    "on duplicate key update likes=values(likes), talking_about_count=values(talking_about_count), checkins=values(checkins)" ;
+                    "on duplicate key update likes=values(likes), talking_about_count=values(talking_about_count), checkins=values(checkins) ;" ;
+
+            String updateRegisterTable =
+                    "update `register_table` set last_update =now() where `alias` = '"+id+"' ; " ;
 
 
-            executeSql.add(insertOrUpdatePoint);
-            executeSql.add(insertOrUpdatePointVolume);
+            if ( null != result.get("category_list") ){
+                List categoryList = (ArrayList) result.get("category_list") ;
+
+                for( Map<String, Object> subCategory: (List<Map<String, Object>>) categoryList){
+                    String subCategoryId = JsonTools.getJsonPathValue(subCategory, "id","");
+                    String subCategoryName = JsonTools.getJsonPathValue(subCategory, "name","");
+
+                    if ("" . equals( subCategoryId )) continue;
+
+
+                    String insertOrUpdatePageCategory =
+                            "insert into `page_category`(id,category,name,last_update) " +
+                            "values("+id+","+subCategoryId+",'"+subCategoryName+"',DATE(now()) ) " +
+                            "on duplicate key update name=values(name), last_update=values(last_update);";
+
+                    executeSql.add(insertOrUpdatePageCategory);
+                }
+                System.out.println(categoryList.toString());
+
+            }
+            executeSql.add(insertOrUpdatePage);
+            executeSql.add(insertOrUpdatePageVolume);
+            executeSql.add(updateRegisterTable);
         }
 
         try {
@@ -105,7 +130,7 @@ public class DailyTracker {
     }
 
     public List<String> getRegisterList(){
-        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and  ";
+        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now()) limit 10  ";
 
         try {
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadRegisterList, MySQLDataSource.connectToGibarCoDB);

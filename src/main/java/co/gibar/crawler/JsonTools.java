@@ -17,7 +17,6 @@ public class JsonTools {
 
             List<String> objs = Lists.newArrayList(path.split("\\."));
 
-//            System.out.println(objs.toString());
             Object current = null;
             for ( String obj:objs ){
                 if (null == current){
@@ -29,8 +28,8 @@ public class JsonTools {
 
             return current.toString();
         }catch(Exception ex){
-//            System.out.println(ex.getMessage());
             return defaultOnNull;
         }
     }
+
 }
