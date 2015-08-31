@@ -4,7 +4,6 @@ import co.gibar.crawler.Crawler;
 import co.gibar.crawler.FBCrawler;
 import co.gibar.crawler.JsonTools;
 import co.gibar.datasource.MySQLDataSource;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -54,9 +53,9 @@ public class DailyTracker {
         return this;
     }
 
-    public ImmutableMap<String, Object> callGraphAPI(String id){
+    public Map<String, Object> callGraphAPI(String id){
 
-        List<ImmutableMap<String,Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count");
+        List<Map<String,Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count");
 
         return jsonResult.get(0);
     }
@@ -106,7 +105,7 @@ public class DailyTracker {
     }
 
     public List<String> getRegisterList(){
-        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 ";
+        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and  ";
 
         try {
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadRegisterList, MySQLDataSource.connectToGibarCoDB);
