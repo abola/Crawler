@@ -1,7 +1,5 @@
 package co.gibar.crawler;
 
-import com.google.common.collect.ImmutableMap;
-
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +19,7 @@ public interface Crawler {
     String crawl(String target);
 
 
-    List<ImmutableMap<String, Object>> crawlJson(String target);
+    List<Map<String, Object>> crawlJson(String target);
 
     String getLastError();
 

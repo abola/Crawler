@@ -1,6 +1,5 @@
 package co.gibar.crawler;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +35,7 @@ abstract public class AbstractCrawler implements Crawler {
 
 
     @Override
-    public List<ImmutableMap<String, Object>> crawlJson(String target){
+    public List<Map<String, Object>> crawlJson(String target){
         String result = this.crawl(target);
 
         if ( result.substring(0,1).equals("[") ){
@@ -48,7 +47,7 @@ abstract public class AbstractCrawler implements Crawler {
             Type jsonType =  new TypeToken<Map<String, Object>>(){}.getType();
             Map<String, Object> transformmedResult = new Gson().fromJson(result, jsonType);
 
-            return Lists.newArrayList( ImmutableMap.copyOf(transformmedResult) );
+            return Lists.newArrayList( transformmedResult );
         }
 
     }
