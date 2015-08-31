@@ -10,7 +10,7 @@ public class MySQLDataSource extends AbstractDataSource {
 
 
     public static final String connectToGibarCoDB =
-            "jdbc:mysql://128.199.204.20/fb?user=fb&password=fbfbfbfb&useUnicode=true&characterEncoding=utf8";
+            "jdbc:mysql://128.199.204.20/fb?user=fb&password=&useUnicode=true&characterEncoding=utf8";
 
 
     // default
