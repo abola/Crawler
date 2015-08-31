@@ -2,11 +2,10 @@ package co.gibar.travel;
 
 import co.gibar.crawler.Crawler;
 import co.gibar.crawler.FBCrawler;
+import co.gibar.crawler.JsonTools;
 import co.gibar.datasource.MySQLDataSource;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -16,14 +15,29 @@ import java.util.Map;
  */
 public class DailyTracker {
 
-
     private Crawler crawl ;
 
-    public DailyTracker(){
-        String clientId = "626465174161774";
-        String clientSecret = "dbd550847406c13cd1da4085331ab54e";
-        crawl = new FBCrawler(clientId, clientSecret);
+    private String clientId;
+    private String clientSecret;
 
+    public DailyTracker(){
+        loadConfiguration();
+
+        crawl = new FBCrawler(clientId, clientSecret);
+    }
+
+    public void loadConfiguration(){
+        String sqlLoadConfiguration = "select * from `configuration` where `key` in ('client_id','client_secret')";
+        try {
+            List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadConfiguration, MySQLDataSource.connectToGibarCoDB);
+
+            for( Map<String, Object> setting: results ){
+                if ( "client_id".equals(setting.get("key").toString()) ) this.clientId = setting.get("value").toString();
+                if ( "client_secret".equals(setting.get("key").toString()) ) this.clientSecret = setting.get("value").toString();
+            }
+        }catch(Exception ex){
+            // throw ConfigurationException
+        }
     }
 
     public DailyTracker sync(){
@@ -54,24 +68,40 @@ public class DailyTracker {
             String id  = result.get("id").toString();
             String name = result.get("name").toString();
             String link = result.get("link").toString();
-            String category = result.get("category").toString();
+            String category = JsonTools.getJsonPathValue(result, "category", "");
 
             // option
-            String lat = ((Map)result.get("location")).get("latitude").toString();
-            String lng = ((Map)result.get("location")).get("longitude").toString();
-            String likes = result.get("likes").toString();
-            String cover = result.get("cover").toString();
-            String checkins = result.get("checkins").toString();
-            String talking_about_count = result.get("talking_about_count").toString();
-            String website = result.get("website").toString();
+            String likes = JsonTools.getJsonPathValue(result, "likes","0");
+            String lat = JsonTools.getJsonPathValue(result, "location.latitude","0");
+            String lng = JsonTools.getJsonPathValue(result, "location.longitude","0");
+
+            String cover = JsonTools.getJsonPathValue(result, "cover","");
+            String checkins = JsonTools.getJsonPathValue(result, "checkins","0");
+            String talking_about_count = JsonTools.getJsonPathValue(result, "talking_about_count","0");
+            String website = JsonTools.getJsonPathValue(result, "website","");
 
             String insertOrUpdatePoint =
-                    "insert into point(id,name,lat,lng,link,cover,category,description,website) " +
-                    "values("+id+",'"+name+"',"+lat+","+lng+",'"+link+"','"+cover+"','"+category+"','','"+website+"')";
+                    "insert into `point`(id,name,lat,lng,link,cover,category,description,website) " +
+                    "values("+id+",'"+name+"',"+lat+","+lng+",'"+link+"','"+cover+"','"+category+"','','"+website+"') " +
+                    "on duplicate key update name=values(name), lat=values(lat), lng=values(lng)" +
+                    " , link=values(link), cover=values(cover), category=values(category) " +
+                    " , description=values(description), website=values(website);";
 
-            System.out.println(insertOrUpdatePoint);
+            String insertOrUpdatePointVolume =
+                    "insert into `point_volume_count`(id,date,likes,talking_about_count,checkins) " +
+                    "values("+id+",DATE(now()),"+likes+","+talking_about_count+","+checkins+") " +
+                    "on duplicate key update likes=values(likes), talking_about_count=values(talking_about_count), checkins=values(checkins)" ;
+
+
+            executeSql.add(insertOrUpdatePoint);
+            executeSql.add(insertOrUpdatePointVolume);
         }
 
+        try {
+            MySQLDataSource.execute( executeSql, MySQLDataSource.connectToGibarCoDB );
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
     }
 

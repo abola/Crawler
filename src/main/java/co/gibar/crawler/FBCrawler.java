@@ -2,6 +2,8 @@ package co.gibar.crawler;
 
 import co.gibar.crawler.exceptions.FBAccessTokenExpireException;
 
+import java.util.Map;
+
 /**
  * Created by Abola Lee on 2015/8/29.
  */
@@ -59,6 +61,7 @@ public class FBCrawler extends WebCrawler{
                 "&access_token=" + this.accessToken;
         return getUrl( request ) ;
     }
+
 
 //
 //    public static void main(String args[]){
