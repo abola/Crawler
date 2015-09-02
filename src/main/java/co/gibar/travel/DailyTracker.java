@@ -125,7 +125,7 @@ public class DailyTracker {
 
 
             if ( null != result.get("posts") ){
-                List posts = (ArrayList) result.get("posts") ;
+                List posts = (ArrayList) ((Map)result.get("posts")).get("data") ;
                 for( Map<String, Object> post: (List<Map<String, Object>>) posts){
                     String postId = JsonTools.getJsonPathValue(post, "id","");
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
