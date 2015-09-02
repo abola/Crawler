@@ -10,7 +10,7 @@ public class MySQLDataSource extends AbstractDataSource {
 
 
     public static final String connectToGibarCoDB =
-            "jdbc:mysql://128.199.204.20/fb?user=fb&password=&useUnicode=true&characterEncoding=utf8";
+            "jdbc:mysql://128.199.204.20/fb?user=fb&password=fbfb1234&useUnicode=true&characterEncoding=utf8";
 
 
     // default
@@ -28,10 +28,7 @@ public class MySQLDataSource extends AbstractDataSource {
         this.connectionString = connectionString;
     }
 
-    @Override public void connect() throws DataSourceException {
-        super.connect();
-        execute("SET NAMES utf8mb4;");
-    }
+
 
     public static List<Map<String, Object>> executeQuery(String sql) throws DataSourceException{
         return new MySQLDataSource().query(sql);
@@ -40,19 +37,22 @@ public class MySQLDataSource extends AbstractDataSource {
     public static List<Map<String, Object>> executeQuery(String sql, String connectionString ) throws DataSourceException{
         MySQLDataSource mds = new MySQLDataSource();
         mds.setConnectionString( connectionString );
+        mds.execute("SET NAMES utf8mb4;");
         return mds.query(sql);
     }
 
 
     public static void execute(String sql, String connectionString ) throws DataSourceException{
         MySQLDataSource mds = new MySQLDataSource();
-        mds.setConnectionString( connectionString );
+        mds.setConnectionString(connectionString);
+        mds.execute("SET NAMES utf8mb4;");
         mds.execute(sql);
     }
 
     public static void execute(List<String> sql, String connectionString ) throws DataSourceException{
         MySQLDataSource mds = new MySQLDataSource();
-        mds.setConnectionString( connectionString );
+        mds.setConnectionString( connectionString);
+        mds.execute("SET NAMES utf8mb4;");
         mds.execute(sql);
     }
 }

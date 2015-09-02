@@ -2,8 +2,6 @@ package co.gibar.crawler;
 
 import co.gibar.crawler.exceptions.FBAccessTokenExpireException;
 
-import java.util.Map;
-
 /**
  * Created by Abola Lee on 2015/8/29.
  */

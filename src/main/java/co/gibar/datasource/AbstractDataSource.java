@@ -1,20 +1,14 @@
 package co.gibar.datasource;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import org.apache.log4j.Logger;
+
+import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public abstract class AbstractDataSource implements DataSource {
 

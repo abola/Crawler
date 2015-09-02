@@ -42,8 +42,11 @@ public class DailyTracker {
     public void loadConfiguration(){
         String sqlLoadConfiguration = "select * from `configuration` where `key` in ('client_id','client_secret','long_token')";
         try {
+
+            System.out.println("Start load configurations. ");
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadConfiguration, MySQLDataSource.connectToGibarCoDB);
 
+            System.out.println("Configurations loaded ");
             for( Map<String, Object> setting: results ){
                 if ( "client_id".equals(setting.get("key").toString()) ) this.clientId = setting.get("value").toString();
                 if ( "client_secret".equals(setting.get("key").toString()) ) this.clientSecret = setting.get("value").toString();
@@ -60,6 +63,7 @@ public class DailyTracker {
 
         List<Map<String, Object>> resultList = Lists.newArrayList();
         for( String id : register ) {
+            System.out.println("process id: " + id);
             resultList.add(callGraphAPI(id));
         }
 
@@ -173,10 +177,13 @@ public class DailyTracker {
     }
 
     public List<String> getRegisterList(){
-        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now())  limit 30  ";
+        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now()) limit 30  ";
 
         try {
+            System.out.println("Start load need sync list");
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadRegisterList, MySQLDataSource.connectToGibarCoDB);
+
+            System.out.println("records: " + results.size() ) ;
 
             List<String> registerList = Lists.newArrayList();
             for(Map<String, Object> register: results){
