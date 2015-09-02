@@ -28,6 +28,10 @@ public class MySQLDataSource extends AbstractDataSource {
         this.connectionString = connectionString;
     }
 
+    @Override public void connect() throws DataSourceException {
+        super.connect();
+        execute("SET NAMES utf8mb4;");
+    }
 
     public static List<Map<String, Object>> executeQuery(String sql) throws DataSourceException{
         return new MySQLDataSource().query(sql);

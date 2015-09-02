@@ -5,6 +5,7 @@ import co.gibar.crawler.FBCrawler;
 import co.gibar.crawler.JsonTools;
 import co.gibar.datasource.MySQLDataSource;
 import com.google.common.collect.Lists;
+import com.google.common.html.HtmlEscapers;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -134,7 +135,7 @@ public class DailyTracker {
                 for( Map<String, Object> post: (List<Map<String, Object>>) posts){
                     String postId = JsonTools.getJsonPathValue(post, "id","");
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
-                    String postMessage = JsonTools.getJsonPathValue(post, "message","").replace("'","\\'");
+                    String postMessage = HtmlEscapers.htmlEscaper().escape( JsonTools.getJsonPathValue(post, "message","").replace("'","\\'") );
 
 
 //                    System.out.println(postCreatedTime.substring(0,19));
