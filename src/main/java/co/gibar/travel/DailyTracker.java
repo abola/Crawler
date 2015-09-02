@@ -6,7 +6,9 @@ import co.gibar.crawler.JsonTools;
 import co.gibar.datasource.MySQLDataSource;
 import com.google.common.collect.Lists;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ public class DailyTracker {
 
     private String longToken;
 
+    SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public DailyTracker(){
         loadConfiguration();
@@ -130,6 +134,13 @@ public class DailyTracker {
                     String postId = JsonTools.getJsonPathValue(post, "id","");
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
                     String postMessage = JsonTools.getJsonPathValue(post, "message","");
+
+                    try {
+                        postCreatedTime = normalDate.format(rfc3339.parse(postCreatedTime));
+                    }catch(Exception ex){
+                        // yesterday
+                        postCreatedTime = normalDate.format(new Date());
+                    }
 
                     if ("" . equals( postId )) continue;
 
