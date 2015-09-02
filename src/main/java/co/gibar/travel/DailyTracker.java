@@ -24,7 +24,7 @@ public class DailyTracker {
 
     private String longToken;
 
-    SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public DailyTracker(){
@@ -136,7 +136,7 @@ public class DailyTracker {
                     String postMessage = JsonTools.getJsonPathValue(post, "message","");
 
                     try {
-                        postCreatedTime = normalDate.format(rfc3339.parse(postCreatedTime));
+                        postCreatedTime = normalDate.format(rfc3339.parse(postCreatedTime.substring(0,19)));
                     }catch(Exception ex){
                         // yesterday
                         postCreatedTime = normalDate.format(new Date());
