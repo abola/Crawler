@@ -134,7 +134,7 @@ public class DailyTracker {
                 for( Map<String, Object> post: (List<Map<String, Object>>) posts){
                     String postId = JsonTools.getJsonPathValue(post, "id","");
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
-                    String postMessage = JsonTools.getJsonPathValue(post, "message","");
+                    String postMessage = JsonTools.getJsonPathValue(post, "message","").replace("'","\\'");
 
 
 //                    System.out.println(postCreatedTime.substring(0,19));
