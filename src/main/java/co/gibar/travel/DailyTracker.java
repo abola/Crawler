@@ -25,7 +25,9 @@ public class DailyTracker {
     private String longToken;
 
     SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+
+    public static final long HOUR = 3600*1000; // in milli-seconds.
 
     public DailyTracker(){
         loadConfiguration();
@@ -124,7 +126,6 @@ public class DailyTracker {
 
                     executeSql.add(insertOrUpdatePageCategory);
                 }
-//                System.out.println(categoryList.toString());
             }
 
 
@@ -135,9 +136,12 @@ public class DailyTracker {
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
                     String postMessage = JsonTools.getJsonPathValue(post, "message","");
 
+
+//                    System.out.println(postCreatedTime.substring(0,19));
                     try {
-                        postCreatedTime = normalDate.format(rfc3339.parse(postCreatedTime.substring(0,19)));
+                        postCreatedTime = normalDate.format( rfc3339.parse(postCreatedTime.substring(0,19)).getTime() + 8*HOUR );
                     }catch(Exception ex){
+                        ex.printStackTrace();
                         // yesterday
                         postCreatedTime = normalDate.format(new Date());
                     }
@@ -146,7 +150,7 @@ public class DailyTracker {
 
                     String insertOrUpdatePagePosts =
                             "insert into `page_posts`(id,post_id,created_time,last_update,message) " +
-                            "values("+id+",'"+postId+"','"+postCreatedTime+"',DATE(now()),'"+postMessage+"' ) " +
+                            "values("+id+",'"+postId+"','"+postCreatedTime+"',now(),'"+postMessage+"' ) " +
                             "on duplicate key update created_time=values(created_time), last_update=values(last_update), message=values(message);";
 
                     executeSql.add(insertOrUpdatePagePosts);
@@ -168,7 +172,7 @@ public class DailyTracker {
     }
 
     public List<String> getRegisterList(){
-        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now()) limit 30  ";
+        String sqlLoadRegisterList = "select `alias` from `register_table` where `suspend` = 0 and last_update < DATE(now())  limit 30  ";
 
         try {
             List<Map<String, Object>> results = MySQLDataSource.executeQuery(sqlLoadRegisterList, MySQLDataSource.connectToGibarCoDB);
