@@ -24,7 +24,7 @@ public class DailyTracker {
 
     private String longToken;
 
-    SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public DailyTracker(){
@@ -67,7 +67,7 @@ public class DailyTracker {
 
     public Map<String, Object> callGraphAPI(String id){
         //fields=id,name,posts.limit(20).since(2015-08-31){created_time,id,name,story,message}
-        List<Map<String, Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count,posts.limit(20).since(2015-08-31){created_time,id}");
+        List<Map<String, Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count,posts.limit(20).since(2015-08-31){created_time,id,message}");
 
         return jsonResult.get(0);
     }
@@ -147,7 +147,7 @@ public class DailyTracker {
                     String insertOrUpdatePagePosts =
                             "insert into `page_posts`(id,post_id,created_time,last_update,message) " +
                             "values("+id+",'"+postId+"','"+postCreatedTime+"',DATE(now()),'"+postMessage+"' ) " +
-                            "on duplicate key update last_update=values(last_update), message=values(message);";
+                            "on duplicate key update created_time=values(created_time), last_update=values(last_update), message=values(message);";
 
                     executeSql.add(insertOrUpdatePagePosts);
                 }
