@@ -62,8 +62,8 @@ public class DailyTracker {
     }
 
     public Map<String, Object> callGraphAPI(String id){
-
-        List<Map<String,Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count");
+        //fields=id,name,posts.limit(20).since(2015-08-31){created_time,id,name,story,message}
+        List<Map<String, Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count,posts.limit(20).since(2015-08-31){created_time,id}");
 
         return jsonResult.get(0);
     }
@@ -82,7 +82,7 @@ public class DailyTracker {
             String lat = JsonTools.getJsonPathValue(result, "location.latitude","0");
             String lng = JsonTools.getJsonPathValue(result, "location.longitude","0");
 
-            String cover = JsonTools.getJsonPathValue(result, "cover","");
+            String cover = JsonTools.getJsonPathValue(result, "cover.source","");
             String checkins = JsonTools.getJsonPathValue(result, "checkins","0");
             String talking_about_count = JsonTools.getJsonPathValue(result, "talking_about_count","0");
             String website = JsonTools.getJsonPathValue(result, "website","");
@@ -120,7 +120,27 @@ public class DailyTracker {
 
                     executeSql.add(insertOrUpdatePageCategory);
                 }
-                System.out.println(categoryList.toString());
+//                System.out.println(categoryList.toString());
+            }
+
+
+            if ( null != result.get("posts") ){
+                List posts = (ArrayList) result.get("posts") ;
+                for( Map<String, Object> post: (List<Map<String, Object>>) posts){
+                    String postId = JsonTools.getJsonPathValue(post, "id","");
+                    String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
+                    String postMessage = JsonTools.getJsonPathValue(post, "message","");
+
+                    if ("" . equals( postId )) continue;
+
+                    String insertOrUpdatePagePosts =
+                            "insert into `page_posts`(id,post_id,created_time,last_update,message) " +
+                            "values("+id+",'"+postId+"','"+postCreatedTime+"',DATE(now()),'"+postMessage+"' ) " +
+                            "on duplicate key update last_update=values(last_update), message=values(message);";
+
+                    executeSql.add(insertOrUpdatePagePosts);
+                }
+
 
             }
             executeSql.add(insertOrUpdatePage);
