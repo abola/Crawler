@@ -66,17 +66,16 @@ public class PostTracker {
 
         List<Map<String, Object>> posts = loadNeedUpdatePost();
 
-        List<Map<String, Object>> resultList = Lists.newArrayList();
         for( Map<String, Object> post : posts ) {
             String postId = post.get("post_id").toString();
+            String seriesType = post.get("series").toString();
 
             System.out.println("process postId: " + postId);
 
-
-            resultList.add(callGraphAPI(postId));
+            updateAll( Lists.newArrayList(callGraphAPI(postId) ), seriesType );
         }
 
-        updateAll(resultList);
+
         return this;
     }
 
@@ -105,13 +104,12 @@ public class PostTracker {
         }
     }
 
-    public void updateAll(List<Map<String, Object>> resultList) {
+    public void updateAll(List<Map<String, Object>> resultList, String seriesType) {
         List<String> executeSql = Lists.newArrayList();
         for (Map<String, Object> result : resultList) {
 
-            String postId  = result.get("post_id").toString();
+            String postId  = result.get("id").toString();
             String id = postId.split("_")[0];
-            String seriesType = result.get("series").toString();
 
             String shares = JsonTools.getJsonPathValue(result, "shares.count", "0");
             String likes = JsonTools.getJsonPathValue(result, "likes.summary.total_count","0");
