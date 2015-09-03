@@ -113,7 +113,7 @@ public class PostTracker {
 
             String shares = JsonTools.getJsonPathValue(result, "shares.count", "0");
             String likes = JsonTools.getJsonPathValue(result, "likes.summary.total_count","0");
-            String comments = JsonTools.getJsonPathValue(result, "likes.summary.total_count","0");
+            String comments = JsonTools.getJsonPathValue(result, "comments.summary.total_count","0");
 
             String insertOrUpdatePageVolume =
                     "insert into `posts_series`(id,post_id,series_type,shares,likes,comments) " +
