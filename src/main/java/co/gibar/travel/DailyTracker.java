@@ -157,8 +157,8 @@ public class DailyTracker {
 
                     String insertOrUpdatePagePosts =
                             "insert into `page_posts`(id,post_id,created_time,last_update,message) " +
-                            "values("+id+",'"+postId+"','"+postCreatedTime+"',now(),'"+postMessage+"' ) " +
-                            "on duplicate key update created_time=values(created_time), last_update=values(last_update), message=values(message);";
+                            "values("+id+",'"+postId+"','"+postCreatedTime+"','"+postCreatedTime+"','"+postMessage+"' ) " +
+                            "on duplicate key update created_time=values(created_time), message=values(message);";
 
                     executeSql.add(insertOrUpdatePagePosts);
                 }

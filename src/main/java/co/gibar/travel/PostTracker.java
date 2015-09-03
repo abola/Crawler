@@ -119,7 +119,12 @@ public class PostTracker {
                     "insert into `posts_series`(id,post_id,series_type,shares,likes,comments) " +
                     "values("+id+",'"+postId+"',"+seriesType+","+shares+","+likes+","+comments+") " +
                     "on duplicate key update shares=values(shares), likes=values(likes), comments=values(comments) ;" ;
+
+            String updatePagePost = "update `page_posts` set last_update= now() where post_id = '"+postId+"' ;";
+
+
             executeSql.add( insertOrUpdatePageVolume );
+            executeSql.add( updatePagePost );
         }
 
         try {
