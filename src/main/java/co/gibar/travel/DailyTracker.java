@@ -26,7 +26,8 @@ public class DailyTracker {
     private String longToken;
 
     SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+    SimpleDateFormat normalDateTime = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+    SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd");
 
     public static final long HOUR = 3600*1000; // in milli-seconds.
 
@@ -74,7 +75,8 @@ public class DailyTracker {
 
     public Map<String, Object> callGraphAPI(String id){
         //fields=id,name,posts.limit(20).since(2015-08-31){created_time,id,name,story,message}
-        List<Map<String, Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count,posts.limit(20).since(2015-08-31){created_time,id,message}");
+        String day = normalDate.format(new Date().getTime() - 48 * HOUR);
+        List<Map<String, Object>> jsonResult = crawl.crawlJson(id + "?fields=id,name,location,general_info,likes,link,checkins,cover,category,category_list,website,description,talking_about_count,posts.limit(20).since("+day+"){created_time,id,message}");
 
         return jsonResult.get(0);
     }
@@ -139,16 +141,16 @@ public class DailyTracker {
                 for( Map<String, Object> post: (List<Map<String, Object>>) posts){
                     String postId = JsonTools.getJsonPathValue(post, "id","");
                     String postCreatedTime = JsonTools.getJsonPathValue(post, "created_time","");
-                    String postMessage = HtmlEscapers.htmlEscaper().escape( JsonTools.getJsonPathValue(post, "message","").replace("'","\\'") );
+                    String postMessage = HtmlEscapers.htmlEscaper().escape(JsonTools.getJsonPathValue(post, "message", "").replace("'", "\\'"));
 
 
 //                    System.out.println(postCreatedTime.substring(0,19));
                     try {
-                        postCreatedTime = normalDate.format( rfc3339.parse(postCreatedTime.substring(0,19)).getTime() + 8*HOUR );
+                        postCreatedTime = normalDateTime.format( rfc3339.parse(postCreatedTime.substring(0,19)).getTime() + 8*HOUR );
                     }catch(Exception ex){
                         ex.printStackTrace();
                         // yesterday
-                        postCreatedTime = normalDate.format(new Date());
+                        postCreatedTime = normalDateTime.format(new Date());
                     }
 
                     if ("" . equals( postId )) continue;

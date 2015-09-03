@@ -44,6 +44,10 @@
                             <mainClass>co.gibar.travel.DailyTracker</mainClass>
                             <id>dailyTracker</id>
                         </program>
+                        <program>
+                            <mainClass>co.gibar.travel.PostTracker</mainClass>
+                            <id>postTracker</id>
+                        </program>
                     </programs>
                 </configuration>
             </plugin>
