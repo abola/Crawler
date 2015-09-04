@@ -99,11 +99,11 @@ public class PostTracker {
 
     private List<Map<String, Object>> loadNeedUpdatePost(){
         String sqlLoadNeedUpdate = ""
-                +" SELECT DATEDIFF( NOW( ) ,  `created_time` ) AS series, A. * "
+                +" SELECT DATEDIFF( NOW() ,  `created_time` ) AS series, A. * "
                 +" FROM  `page_posts` A "
                 +" WHERE NOT DATEDIFF(  `last_update` ,  `created_time` ) >=7 "
-                +" AND DATEDIFF( NOW( ) ,  `created_time` ) -1 > 0 "
-                +" AND DATEDIFF( NOW( ) ,  `created_time` ) - DATEDIFF(  `last_update` ,  `created_time` ) > 0 "
+                +" AND HOUR(TIMEDIFF( NOW() ,  `created_time` ))  > 24 "
+                +" AND HOUR(TIMEDIFF( NOW() ,  `created_time` )) - HOUR(TIMEDIFF(`last_update`, `created_time` )) > 24 "
                 +" AND NOT `deprecated` = 1"
                 +" LIMIT 30 ";
 
