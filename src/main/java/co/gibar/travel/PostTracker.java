@@ -68,7 +68,7 @@ public class PostTracker {
             System.out.println("process postId: " + postId + ", series: " + seriesType);
 
             try {
-                updateAll(Lists.newArrayList(callGraphAPI(postId)), seriesType);
+                updateAll(Lists.newArrayList(callGraphAPI(postId)), postId, seriesType);
             }catch(Exception ex) {
                 deprecatedThis(postId);
                 continue;
@@ -112,15 +112,17 @@ public class PostTracker {
 
             return results;
         }catch(Exception ex){
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
             return Lists.newArrayList();
         }
     }
 
-    public void updateAll(List<Map<String, Object>> resultList, String seriesType) {
+    public void updateAll(List<Map<String, Object>> resultList, String postId, String seriesType) {
         List<String> executeSql = Lists.newArrayList();
         for (Map<String, Object> result : resultList) {
 
-            String postId  = result.get("id").toString();
+//            String postId  = result.get("id").toString();
             String id = postId.split("_")[0];
 
             String shares = JsonTools.getJsonPathValue(result, "shares.count", "0");
@@ -135,9 +137,13 @@ public class PostTracker {
             String updatePagePost = "update `page_posts` set last_update= now() where post_id = '"+postId+"' ;";
 
 
+
+
             executeSql.add( insertOrUpdatePageVolume );
             executeSql.add( updatePagePost );
         }
+
+//        System.out.print(executeSql.toString());
 
         try {
             MySQLDataSource.execute( executeSql, MySQLDataSource.connectToGibarCoDB );
