@@ -16,11 +16,6 @@ import java.util.Map;
  */
 public class PostTracker {
 
-    static String SERIES_TYPE_FIRST_DAY = "1";
-    static String SERIES_TYPE_SECOND_DAY = "2";
-    static String SERIES_TYPE_TRIPLE_DAY = "3";
-    static String SERIES_TYPE_A_WEEK = "7";
-
     private Crawler crawl ;
 
     private String clientId;
