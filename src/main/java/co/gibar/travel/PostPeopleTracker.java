@@ -69,9 +69,10 @@ public class PostPeopleTracker {
 //
 //            updateAll( Lists.newArrayList(callGraphAPI(postId)), seriesType );
 //        }
-
+//fields=likes{id},comments.limit(2){from{id},likes.limit(0).summary(true)}
         StoreTools.startStdoutTo("/tmp/testme");
 
+        System.out.println(this.clientId);
         System.out.append(this.clientId);
         System.out.append(this.clientSecret);
 
