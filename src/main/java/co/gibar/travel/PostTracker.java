@@ -99,7 +99,7 @@ public class PostTracker {
 
     private List<Map<String, Object>> loadNeedUpdatePost(){
         String sqlLoadNeedUpdate = ""
-                +" SELECT DATEDIFF( NOW() ,  `created_time` ) AS series, A. * "
+                +" SELECT FLOOR(HOUR(TIMEDIFF( NOW(),`created_time` ))/24) AS series, A. * "
                 +" FROM  `page_posts` A "
                 +" WHERE NOT DATEDIFF(  `last_update` ,  `created_time` ) >=7 "
                 +" AND HOUR(TIMEDIFF( NOW() ,  `created_time` ))  > 24 "
