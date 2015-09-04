@@ -38,11 +38,15 @@ abstract public class AbstractCrawler implements Crawler {
     public List<Map<String, Object>> crawlJson(String target){
         String result = this.crawl(target);
 
-        if ( result.substring(0,1).equals("[") ){
+        if ( null == result || 0 == result.length() ) {
+            return Lists.newArrayList() ;
+        }
+        else if ( result.substring(0,1).equals("[") ){
             // collection type
             Type jsonType =  new TypeToken<ArrayList<HashMap<String, Object>>>(){}.getType();
             return new Gson().fromJson(result, jsonType);
-        }else {
+        }
+        else {
             // object type
             Type jsonType =  new TypeToken<Map<String, Object>>(){}.getType();
             Map<String, Object> transformmedResult = new Gson().fromJson(result, jsonType);

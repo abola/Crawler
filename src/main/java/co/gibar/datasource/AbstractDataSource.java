@@ -77,7 +77,8 @@ public abstract class AbstractDataSource implements DataSource {
         return result;
     }
 
-    @Override public void execute(String sql )throws DataSourceException{
+    @Override
+    public void execute(String sql )throws DataSourceException{
         if ( null == connection ) {
             connect();
             execute(sql);

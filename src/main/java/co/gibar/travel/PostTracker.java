@@ -65,17 +65,33 @@ public class PostTracker {
             String postId = post.get("post_id").toString();
             String seriesType = post.get("series").toString();
 
-            System.out.println("process postId: " + postId);
+            System.out.println("process postId: " + postId + ", series: " + seriesType);
 
-            updateAll( Lists.newArrayList(callGraphAPI(postId) ), seriesType );
+            try {
+                updateAll(Lists.newArrayList(callGraphAPI(postId)), seriesType);
+            }catch(Exception ex) {
+                deprecatedThis(postId);
+                continue;
+            }
+
         }
 
 
         return this;
     }
 
+    private void deprecatedThis(String postId){
+        String sqlUpdatePagePostsToDeprecated =
+                "update `page_posts` set `deprecated` = 1 where post_id = '"+postId+"';";
+        System.out.println("deprecate post: " + postId);
 
-    public Map<String, Object> callGraphAPI(String postId){
+        try {
+            MySQLDataSource.execute(sqlUpdatePagePostsToDeprecated, MySQLDataSource.connectToGibarCoDB);
+        }catch(Exception ex){}
+
+    }
+
+    public Map<String, Object> callGraphAPI(String postId) {
         List<Map<String, Object>> jsonResult = crawl.crawlJson(postId + "?fields=id,name,shares,likes.limit(0).summary(1),comments.limit(0).summary(1)");
         return jsonResult.get(0);
     }
@@ -83,11 +99,12 @@ public class PostTracker {
 
     private List<Map<String, Object>> loadNeedUpdatePost(){
         String sqlLoadNeedUpdate = ""
-                +" SELECT DATEDIFF( NOW( ) ,  `created_time` ) - DATEDIFF(  `last_update` ,  `created_time` ) AS series, A. * "
+                +" SELECT DATEDIFF( NOW( ) ,  `created_time` ) AS series, A. * "
                 +" FROM  `page_posts` A "
                 +" WHERE NOT DATEDIFF(  `last_update` ,  `created_time` ) >=7 "
                 +" AND DATEDIFF( NOW( ) ,  `created_time` ) -1 > 0 "
                 +" AND DATEDIFF( NOW( ) ,  `created_time` ) - DATEDIFF(  `last_update` ,  `created_time` ) > 0 "
+                +" AND NOT `deprecated` = 1"
                 +" LIMIT 30 ";
 
         try {
