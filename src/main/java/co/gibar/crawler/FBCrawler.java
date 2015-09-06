@@ -1,6 +1,11 @@
 package co.gibar.crawler;
 
 import co.gibar.crawler.exceptions.FBAccessTokenExpireException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Created by Abola Lee on 2015/8/29.
@@ -13,6 +18,8 @@ public class FBCrawler extends WebCrawler{
     private String clientSecret;
 
     private String apiVersion = "v2.4";
+
+    private String graphApiErrorCode = "0";
 
     public FBCrawler(String longTermAccessToken){
         this.accessToken = longTermAccessToken;
@@ -57,14 +64,34 @@ public class FBCrawler extends WebCrawler{
     }
 
     protected String getGraphApi(String api) throws FBAccessTokenExpireException {
+
+        this.graphApiErrorCode = "0";
+
         String request = "https://graph.facebook.com/" +
                 this.apiVersion + "/" +
                 api +
                 "&locale=zh_TW" +
                 "&access_token=" + this.accessToken;
-        return getUrl( request ) ;
+
+        String response = getUrl(request);
+
+        try{
+            Type jsonType =  new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> transformmedResult = new Gson().fromJson(response, jsonType);
+
+            this.graphApiErrorCode = JsonTools.getJsonPathValue( transformmedResult, "error.code", "0" );
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return response ;
     }
 
+
+    public String getGraphApiErrorCode(){
+        return this.graphApiErrorCode;
+    }
 
 //
 //    public static void main(String args[]){

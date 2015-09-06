@@ -32,4 +32,24 @@ public class JsonTools {
         }
     }
 
+    public static List<Map<String, Object>> getJsonPathListMap(Map<String, Object> jsonObject, String path){
+        try {
+//            if (path.indexOf(".") < 0) return jsonObject.get(path).toString();
+
+            List<String> objs = Lists.newArrayList(path.split("\\."));
+
+            Object current = null;
+            for ( String obj:objs ){
+                if (null == current){
+                    current = jsonObject.get( obj );
+                }else{
+                    current = ((Map<String, Object>)current).get(obj);
+                }
+            }
+
+            return (List<Map<String, Object>>)current;
+        }catch(Exception ex){
+            return Lists.newArrayList();
+        }
+    }
 }

@@ -15,25 +15,6 @@ import java.util.Map;
  */
 abstract public class AbstractCrawler implements Crawler {
 
-    private List<String> error = Lists.newArrayList();
-
-    public void addError(String errorLog){
-        error.add(errorLog);
-    }
-
-    @Override
-    public List<String> getError(){
-        return this.error;
-    }
-
-    @Override
-    public String getLastError(){
-        return error.size()>0?
-                error.get( error.size()-1 ) :
-                null;
-    }
-
-
     @Override
     public List<Map<String, Object>> crawlJson(String target){
         String result = this.crawl(target);

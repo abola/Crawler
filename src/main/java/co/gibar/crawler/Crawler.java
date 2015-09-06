@@ -21,7 +21,4 @@ public interface Crawler {
 
     List<Map<String, Object>> crawlJson(String target);
 
-    String getLastError();
-
-    List<String> getError();
 }
