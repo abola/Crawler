@@ -94,7 +94,7 @@ public class FBCrawler extends WebCrawler{
         }
 //
 //        System.err.println("http status:" + this.responseCode );
-//        System.err.println("error code:" + this.graphApiErrorCode );
+        System.err.println("error code:" + this.graphApiErrorCode );
 
         if ( "2".equals(this.graphApiErrorCode) ){
             // out of retry max
