@@ -11,6 +11,8 @@ public class StoreTools {
 
     public static Boolean startStdoutTo(String path){
         try {
+            new File( path.substring(0, path.lastIndexOf("/")-1)  ) . mkdir();
+
             System.setOut(new PrintStream(new FileOutputStream(path, false)));
             return true;
         }catch(Exception ex){
