@@ -1,6 +1,7 @@
 package co.gibar.crawler;
 
 import co.gibar.crawler.exceptions.FBAccessTokenExpireException;
+import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -94,12 +95,12 @@ public class FBCrawler extends WebCrawler{
         }
 //
 //        System.err.println("http status:" + this.responseCode );
-        System.err.println("error code:" + this.graphApiErrorCode );
+        System.err.println("error code:" + Ints.tryParse(this.graphApiErrorCode) );
 
-        if ( "2".equals(this.graphApiErrorCode) ){
+        if ( 2 == Ints.tryParse(this.graphApiErrorCode) ){
             // out of retry max
             if ( retryMaxCounter-- <= 0 ) return response;
-            System.err.println("Retry after 5 sec.");
+            System.err.println("Retry after 5 sec...("+ String.valueOf(retryMaxCounter) + ")" );
             try {
                 Thread.currentThread().sleep(5000);
                 return getGraphApi(api);
