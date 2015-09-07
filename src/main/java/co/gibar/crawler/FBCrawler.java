@@ -73,8 +73,14 @@ public class FBCrawler extends WebCrawler{
                 "&locale=zh_TW" +
                 "&access_token=" + this.accessToken;
 
+        if ( "https".equals( api.substring(0,5) )  ){
+            request = api;
+        }
+
+//        System.err.println( request );
         String response = getUrl(request);
 
+//        System.err.println("response size:" +response.length());
         try{
             Type jsonType =  new TypeToken<Map<String, Object>>(){}.getType();
             Map<String, Object> transformmedResult = new Gson().fromJson(response, jsonType);
@@ -84,6 +90,10 @@ public class FBCrawler extends WebCrawler{
         }catch(Exception ex){
             ex.printStackTrace();
         }
+//
+//        System.err.println("http status:" + this.responseCode );
+//        System.err.println("error code:" + this.graphApiErrorCode );
+
 
         return response ;
     }

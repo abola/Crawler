@@ -14,7 +14,7 @@ abstract public class WebCrawler extends AbstractCrawler {
 
     private final String USER_AGENT = "Mozilla/5.0";
 
-    private int responseCode;
+    protected int responseCode;
 
     protected String getUrl(String url){
         return getUrl(url, "GET");
