@@ -86,22 +86,8 @@ public class PostPeopleTracker {
     }
 
     private Map<String, Object> loadPostLikesAfter(String next){
-        try {
-            List<Map<String, Object>> jsonResult = crawl.crawlJson(next);
-            return jsonResult.get(0);
-        }catch(Exception ex){
-            if ( "2".equals( crawl.getGraphApiErrorCode() ) ){
-                try {
-                    Thread.currentThread().sleep(2000);
-                    return loadPostLikesAfter(next);
-                }catch(Exception sleepEx){
-                    sleepEx.printStackTrace();
-                    return null;
-                }
-            }
-            ex.printStackTrace();
-            return null;
-        }
+        List<Map<String, Object>> jsonResult = crawl.crawlJson(next);
+        return jsonResult.get(0);
     }
     private List<Map<String, Object>> load7DaysPost(){
         String sqlLoadNeedUpdate = ""

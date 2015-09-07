@@ -21,6 +21,8 @@ public class FBCrawler extends WebCrawler{
 
     private String graphApiErrorCode = "0";
 
+    private int retryMaxCounter = 5;
+
     public FBCrawler(String longTermAccessToken){
         this.accessToken = longTermAccessToken;
     }
@@ -94,6 +96,17 @@ public class FBCrawler extends WebCrawler{
 //        System.err.println("http status:" + this.responseCode );
 //        System.err.println("error code:" + this.graphApiErrorCode );
 
+        if ( "2".equals(this.graphApiErrorCode) ){
+            // out of retry max
+            if ( retryMaxCounter-- <= 0 ) return response;
+
+            try {
+                Thread.currentThread().sleep(5000);
+                return getGraphApi(api);
+            }catch(Exception sleepEx){
+                return getGraphApi(api);
+            }
+        }
 
         return response ;
     }
