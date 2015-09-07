@@ -95,9 +95,9 @@ public class FBCrawler extends WebCrawler{
         }
 //
 //        System.err.println("http status:" + this.responseCode );
-        System.err.println("error code:" + Ints.tryParse(this.graphApiErrorCode) );
+        System.err.println("error code:" + Ints.tryParse(this.graphApiErrorCode.split("\\.")[0]));
 
-        if ( 2 == Ints.tryParse(this.graphApiErrorCode) ){
+        if ( 2 == Ints.tryParse(this.graphApiErrorCode.split("\\.")[0]) ){
             // out of retry max
             if ( retryMaxCounter-- <= 0 ) return response;
             System.err.println("Retry after 5 sec...("+ String.valueOf(retryMaxCounter) + ")" );
