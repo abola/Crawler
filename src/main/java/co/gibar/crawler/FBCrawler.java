@@ -99,7 +99,7 @@ public class FBCrawler extends WebCrawler{
         if ( "2".equals(this.graphApiErrorCode) ){
             // out of retry max
             if ( retryMaxCounter-- <= 0 ) return response;
-
+            System.err.println("Retry after 5 sec.");
             try {
                 Thread.currentThread().sleep(5000);
                 return getGraphApi(api);

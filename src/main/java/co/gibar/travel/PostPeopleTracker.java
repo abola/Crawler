@@ -131,6 +131,7 @@ public class PostPeopleTracker {
 
             String id = JsonTools.getJsonPathValue(post, "id", "");
             String postId = JsonTools.getJsonPathValue(post, "post_id", "");
+            System.err.println( "processing: "+postId );
 
             stdoutStart("/2016/" + postId);
 
