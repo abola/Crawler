@@ -36,6 +36,7 @@ public class PostPeopleTracker {
     String LV2_LIKES_COMMON = "comment.like";
     String LV2_LIKES_POST = "post.list";
 
+    String currentParty = "";
 
     public PostPeopleTracker(){
         loadConfiguration();
@@ -91,7 +92,7 @@ public class PostPeopleTracker {
     }
     private List<Map<String, Object>> load7DaysPost(){
         String sqlLoadNeedUpdate = ""
-                +" SELECT series.* "
+                +" SELECT series.*, political.party "
                 +" FROM `page_posts` posts "
                 +"    , `posts_series` series "
                 +"    , `political` political"
@@ -131,6 +132,8 @@ public class PostPeopleTracker {
 
             String id = JsonTools.getJsonPathValue(post, "id", "");
             String postId = JsonTools.getJsonPathValue(post, "post_id", "");
+
+            currentParty = post.get("party").toString();
             System.err.println( "processing: "+postId );
 
             stdoutStart("/2016/" + postId);
@@ -267,7 +270,7 @@ public class PostPeopleTracker {
 
 
     private void append(String id, String postId, String lv1, String lv2, String from){
-        System.out.println(id + "," +postId+","+lv1+","+lv2+","+from);
+        System.out.println(id + "," +postId+","+lv1+","+lv2+","+from+","+currentParty);
     }
 
     private void stdoutStart(String path){
