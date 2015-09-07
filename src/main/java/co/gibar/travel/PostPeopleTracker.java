@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class PostPeopleTracker {
     SimpleDateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     SimpleDateFormat normalDateTime = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
     SimpleDateFormat normalDate = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat systemDate = new SimpleDateFormat("yyyyMMdd");
 
     public static final long HOUR = 3600*1000; // in milli-seconds.
 
@@ -134,9 +136,9 @@ public class PostPeopleTracker {
             String postId = JsonTools.getJsonPathValue(post, "post_id", "");
 
             currentParty = post.get("party").toString();
-            System.err.println( "processing: "+postId );
+            System.err.println("processing: " + postId);
 
-            stdoutStart("/2016/" + postId);
+            stdoutStart("/2016/" + systemDate.format(new Date()) + "/" + postId);
 
 
             // load comments
