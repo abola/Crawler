@@ -11,7 +11,7 @@ public class StoreTools {
 
     public static Boolean startStdoutTo(String path){
         try {
-            System.setOut(new PrintStream(new FileOutputStream(path, true)));
+            System.setOut(new PrintStream(new FileOutputStream(path, false)));
             return true;
         }catch(Exception ex){
             return false;
