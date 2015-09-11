@@ -256,7 +256,7 @@ public class PostPeopleTracker {
 
     private void procLikes(Map<String, Object> likes, String id, String postId) {
         List<Map<String, Object>> dataList = JsonTools.getJsonPathListMap( likes, "likes.data" );
-        System.err.println("likes size: " + dataList.size() );
+        System.err.println("likes size: " + (null==dataList?0:dataList.size()) );
         try {
             for (Map<String, Object> data : dataList) {
                 String like_id = JsonTools.getJsonPathValue(data, "id", "");
