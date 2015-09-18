@@ -73,9 +73,9 @@ public class TrafficXml2CSV {
                                 .create()
                                 .transfer(xml.toString())
                         ;
-                        System.err.println("[o]file:" + argv[0]);
+                        System.err.println("[o]file:" + path);
                     }catch (Exception ex){
-                        System.err.println("[x]file:" + argv[0]);
+                        System.err.println("[x]file:" + path);
                     }
                 }
 
