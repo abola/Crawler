@@ -24,20 +24,25 @@ public class TrafficXml2CSV {
         String day = doc.select("XML_Head").attr("updatetime").toString().replaceAll("/","").substring(0,8);
 
 //        System.out.println("/traffic/" + day + ".csv");
-        StoreTools.startStdoutTo("/traffic/" + day + ".csv");
+        StringBuilder sb = new StringBuilder();
+
 
         for (Element e : doc.select("Info")) {
-            System.out.append(e.attr("vdid"));
-            System.out.append("," + e.attr("datacollecttime"));
-            System.out.append("," + e.select("lane").attr("vsrid"));
-            System.out.append("," + e.select("lane").attr("speed"));
-            System.out.append("," + e.select("lane").attr("laneoccupy"));
-            System.out.append("," + e.select("lane cars[carid=S]").attr("volume"));
-            System.out.append("," + e.select("lane cars[carid=T]").attr("volume"));
-            System.out.append("," + e.select("lane cars[carid=L]").attr("volume"));
+            sb.append(e.attr("vdid"));
+            sb.append("," + e.attr("datacollecttime"));
+            sb.append("," + e.select("lane").attr("vsrid"));
+            sb.append("," + e.select("lane").attr("speed"));
+            sb.append("," + e.select("lane").attr("laneoccupy"));
+            sb.append("," + e.select("lane cars[carid=S]").attr("volume"));
+            sb.append("," + e.select("lane cars[carid=T]").attr("volume"));
+            sb.append("," + e.select("lane cars[carid=L]").attr("volume"));
             //System.out.print(","+e.select("lane cars[carid=S]"));
-            System.out.append("\n");
+            sb.append("\n");
         }
+
+
+        StoreTools.startStdoutTo("/traffic/" + day + ".csv");
+        System.out.print(sb.toString());
         StoreTools.resetStdout();
 
         return this;
