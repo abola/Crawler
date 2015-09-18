@@ -31,6 +31,12 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
+        <dependency>
+            <!-- jsoup HTML parser library @ http://jsoup.org/ -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.3</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -52,6 +58,12 @@
                         <program>
                             <mainClass>co.gibar.travel.PostPeopleTracker</mainClass>
                             <id>postPeopleTracker</id>
+                        </program>
+
+
+                        <program>
+                            <mainClass>co.gibar.traffic.TrafficXml2CSV</mainClass>
+                            <id>trafficXml2CSV</id>
                         </program>
                     </programs>
                 </configuration>
