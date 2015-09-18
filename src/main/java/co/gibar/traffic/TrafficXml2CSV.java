@@ -62,7 +62,7 @@ public class TrafficXml2CSV {
 
                     try{
                         StringBuilder xml = new StringBuilder();
-                        File file = new File(argv[0]);
+                        File file = new File(path);
 
 
                         for (String line : Files.readLines(file, Charsets.UTF_8)) {
