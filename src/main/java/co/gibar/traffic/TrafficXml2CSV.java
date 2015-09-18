@@ -30,13 +30,21 @@ public class TrafficXml2CSV {
         for (Element e : doc.select("Info")) {
             sb.append(e.attr("vdid"));
             sb.append("," + e.attr("datacollecttime"));
-            sb.append("," + e.select("lane").attr("vsrid"));
-            sb.append("," + e.select("lane").attr("speed"));
-            sb.append("," + e.select("lane").attr("laneoccupy"));
-            sb.append("," + e.select("lane cars[carid=S]").attr("volume"));
-            sb.append("," + e.select("lane cars[carid=T]").attr("volume"));
-            sb.append("," + e.select("lane cars[carid=L]").attr("volume"));
-            //System.out.print(","+e.select("lane cars[carid=S]"));
+
+            sb.append("," + e.select("lane[vsrid=1]").attr("vsrid"));
+            sb.append("," + e.select("lane[vsrid=1]").attr("speed"));
+            sb.append("," + e.select("lane[vsrid=1]").attr("laneoccupy"));
+            sb.append("," + e.select("lane[vsrid=1] cars[carid=S]").attr("volume"));
+            sb.append("," + e.select("lane[vsrid=1] cars[carid=T]").attr("volume"));
+            sb.append("," + e.select("lane[vsrid=1] cars[carid=L]").attr("volume"));
+
+
+            sb.append("," + e.select("lane[vsrid=2]").attr("vsrid"));
+            sb.append("," + e.select("lane[vsrid=2]").attr("speed"));
+            sb.append("," + e.select("lane[vsrid=2]").attr("laneoccupy"));
+            sb.append("," + e.select("lane[vsrid=2] cars[carid=S]").attr("volume"));
+            sb.append("," + e.select("lane[vsrid=2] cars[carid=T]").attr("volume"));
+            sb.append("," + e.select("lane[vsrid=2] cars[carid=L]").attr("volume"));
             sb.append("\n");
         }
 
