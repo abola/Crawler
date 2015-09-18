@@ -55,22 +55,31 @@ public class TrafficXml2CSV {
 
     public static void main(String[] argv){
 
-        try {
-            StringBuilder xml = new StringBuilder();
-            File file = new File(argv[0]);
-            for (String line : Files.readLines(file, Charsets.UTF_8)) {
-                xml.append(line.trim() + "\n");
+
+            for( String path : argv[0].split(",") ){
+
+                if (! "".equals(path.trim()) ){
+
+                    try{
+                        StringBuilder xml = new StringBuilder();
+                        File file = new File(argv[0]);
+
+
+                        for (String line : Files.readLines(file, Charsets.UTF_8)) {
+                            xml.append(line.trim() + "\n");
+                        }
+
+                        TrafficXml2CSV
+                                .create()
+                                .transfer(xml.toString())
+                        ;
+                        System.err.println("[o]file:" + argv[0]);
+                    }catch (Exception ex){
+                        System.err.println("[x]file:" + argv[0]);
+                    }
+                }
+
             }
-
-            TrafficXml2CSV
-                    .create()
-                    .transfer(xml.toString())
-            ;
-            System.err.println("[o]file:" + argv[0]);
-        }catch (Exception ex){
-            System.err.println("[x]file:" + argv[0]);
-        }
-
 
     }
 }
