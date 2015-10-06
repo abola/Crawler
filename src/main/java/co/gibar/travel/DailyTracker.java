@@ -84,6 +84,7 @@ public class DailyTracker {
     public void updateAll(List<Map<String, Object>> resultList){
         List<String> executeSql = Lists.newArrayList();
         for( Map<String, Object> result : resultList){
+            if ( null == result || null == result.get("id") ) continue;
 
             String id  = result.get("id").toString();
             String name = result.get("name").toString();
