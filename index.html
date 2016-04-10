@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Crawlertmp by abola</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="without-description">
+        <h1>Crawlertmp</h1>
+        <p></p>
+        <p class="view"><a href="https://github.com/abola/CrawlerTmp">View the Project on GitHub <small>abola/CrawlerTmp</small></a></p>
+        <ul>
+          <li><a href="https://github.com/abola/CrawlerTmp/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/abola/CrawlerTmp/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/abola/CrawlerTmp">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Java 網路資料爬蟲包 GitHub: <a href="https://github.com/abola/CrawlerPack">https://github.com/abola/CrawlerPack</a>
+<a href="https://maven-badges.herokuapp.com/maven-central/com.github.abola/crawler"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.abola/crawler/badge.svg" alt="Maven Central"></a></p>
+
+<hr>
+
+<h3>
+<a id="關於爬蟲包" class="anchor" href="#%E9%97%9C%E6%96%BC%E7%88%AC%E8%9F%B2%E5%8C%85" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>關於爬蟲包</h3>
+
+<p>在Java上開發爬蟲並不困難，最常見的套件便是<a href="http://jsoup.org/">Jsoup</a>。
+然而<a href="http://jsoup.org/">Jsoup</a>仍有許多問題。例如無法取得 http/https 以外協定的
+資源、無法使用中文XML、不支援壓縮格式等等…以致使用Java來開發爬蟲，往往需要使用相當多
+套件，同時也編寫更多的程式碼。爬蟲開發的便利性，相較其它語言；如Python，確實相對遜色。</p>
+
+<p>爬蟲包的產生，主要是以<a href="http://jsoup.org/">Jsoup</a>為核心，整合各式套件，修補中文處理
+問題。並提供<strong><em>SOP開發模式</em></strong>，減少開發時間，且更容易上手。</p>
+
+<p>同時爬蟲包也是一個開源專案，採MIT授權<em>(可商用、再修改)</em>。
+並已上傳至<a href="https://maven-badges.herokuapp.com/maven-central/com.github.abola/crawler">公開伺服器</a>
+提供下載，你可以很簡易的將爬蟲包加入專案中</p>
+
+<p>範例 Maven pom.xml，<a href="https://maven-badges.herokuapp.com/maven-central/com.github.abola/crawler">其它支援格式</a></p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;com.github.abola&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;crawler&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;[1.0.0,2.0.0)&lt;/<span class="pl-ent">version</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<hr>
+
+<p>使用爬蟲包，通常你可以在簡短的數行程式碼中，完成許多繁鎖的工作</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// 北市Youbike資訊</span>
+<span class="pl-smi">String</span> uri <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>gz:https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz<span class="pl-pds">"</span></span>;
+
+<span class="pl-c">// 列出所有大安區內的租借站</span>
+<span class="pl-smi">CrawlerPack</span><span class="pl-k">.</span>start()
+    .getFromJson(uri)
+    .select(<span class="pl-s"><span class="pl-pds">"</span>retVal &gt; *:contains(大安區)<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>上述範例中，至少進行了以下項目</p>
+
+<ul>
+<li>使用 https 協定，取得遠端資源</li>
+<li>解縮壓檔案 YouBikeTP.gz</li>
+<li>讀取／解析 Json 格式內容</li>
+<li>將 Json 轉換為 <a href="http://jsoup.org/">Jsoup</a> 物件</li>
+<li>使用 <a href="http://jsoup.org/">Jsoup</a> 內建的 CSS Selector 取出資料</li>
+</ul>
+
+<hr>
+
+<p>next: 爬蟲包 - SOP開發模式</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/abola">abola</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
